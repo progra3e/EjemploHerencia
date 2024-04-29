@@ -1,0 +1,70 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+
+<EditForm Model=@persona>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="persona.Nombre">Nombre</label>
+        <InputNumber @bind-Value=persona.Nombre class="form-control" id="Nombre" />
+        <ValidationMessage For="() => persona.Nombre" />
+    </div>
+    <div class="form-group">
+        <label for="persona.Apellido">Apellido</label>
+        <InputText @bind-Value=persona.Apellido class="form-control" id="Apellido" />
+        <ValidationMessage For="() =>persona.Apellido" />
+    </div>
+    <input type="submit" class="btn btn-primary" value="Save" />
+</EditForm>
+
+@* <div>
+    @if (personas == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Direccion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var persona in personas)
+                {
+                    <tr>
+                        <td>@persona.Nombre</td>
+                        <td>@persona.Apellido</td>
+                        <td>@persona.Direccion</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+ *@
+@code
+{
+    Persona persona = new Persona();
+
+    List<Persona> personas = new List<Persona>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        personas = await localStorage.GetItemAsync<List<Persona>>("personas");
+
+    }
+
+    protected async Task Guardar()
+    {
+        personas.Add(persona);
+        
+        await localStorage.SetItemAsync("personas", personas);
+    }
+}
